@@ -7,10 +7,12 @@ The `litter-robot` component offers integration with the [Litter-Robot](https://
 
 ## Install
 
-Load this component by copying the entire directory as described in https://developers.home-assistant.io/docs/en/creating_component_loading.html
+Load this component by copying the entire directory as described in https://developers.home-assistant.io/docs/en/creating_component_loading.html . This is easiest with the Samba share add-on.
 
 
 ## Config
+
+You'll need to have connected to your robot at least once before with the mobile app. Check out [this thread](https://community.smartthings.com/t/litter-robot-connect/106882/18) for more details.
 
 Edit `/config/configuration.yaml`:
 
@@ -21,7 +23,7 @@ litter_robot:
   api_key: "<your mobile app's API key>"
 ```
 
-Restart HASS to activate the component and to reapply config changes.
+Restart HASS to activate the component and to reapply config changes. This can be done from the frontend via Configuration -> General -> Server management -> Restart.
 
 
 ## Grouping Sensors
@@ -30,8 +32,8 @@ Edit `/config/groups.yaml`:
 
 ```yaml
 Tesla Meowdel S:
-  - sensor.litterrobot_status
-  - sensor.litterrobot_waste
+  - sensor.litter_robot_status
+  - sensor.litter_robot_waste
 ```
 
 Then reload Groups.
@@ -39,7 +41,7 @@ Then reload Groups.
 
 ## Development
 
-Watch `/config/home-assistant.log`.
+Watch `/config/home-assistant.log`, which is accessible from the frontend via Developer tools -> (i) (/dev-info).
 
 
 ## TODO

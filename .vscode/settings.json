@@ -1,3 +1,22 @@
 {
-  "python.jediEnabled": false
+  "python.jediEnabled": false,
+  "deploy.reloaded": {
+    "packages": [
+      {
+        "name": "Python",
+        "description": "All the pythons",
+        "files": [
+          "**/*.py"
+        ]
+      }
+    ],
+    "targets": [
+      {
+        "type": "local",
+        "name": "hassio.local/config",
+        "description": "Volume mounted config directory of Home Assistant",
+        "dir": "/Volumes/config/custom_components/"
+      }
+    ]
+  }
 }
