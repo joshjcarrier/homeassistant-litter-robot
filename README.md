@@ -28,15 +28,19 @@ Restart HASS to activate the component and to reapply config changes. This can b
 
 ## Grouping Sensors
 
-Edit `/config/groups.yaml`:
+Discover the list by searching "litter_robot" in the frontend: Developer tools -> <> (States).
+
+Edit `/config/groups.yaml`. For a robot nicknamed "Tesla Meowdel S":
 
 ```yaml
 Tesla Meowdel S:
-  - sensor.litter_robot_status
-  - sensor.litter_robot_waste
+  control: hidden
+  entities:
+    - sensor.litter_robot_tesla_meowdel_s_status
+    - sensor.litter_robot_tesla_meowdel_s_waste
 ```
 
-Then reload Groups.
+Then reload Groups config. This is easiest done with the frontend Configuration -> General -> Configuration reloading -> Reload groups.
 
 
 ## Development

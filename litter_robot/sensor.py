@@ -12,6 +12,18 @@ DEPENDENCIES = ['litter_robot']
 LITTER_ROBOT_DOMAIN = 'litter_robot'
 LITTER_ROBOT_LOGIN = 'litter_robot_login'
 LITTER_ROBOTS = 'litter_robots'
+LITTER_ROBOT_UNIT_STATUS = {
+  'RDY': 'Ready',
+  'CCP': 'Clean Cycling',
+  'CCC': 'Clean Cycle Completed',
+  'DF1': 'Ready - Drawer Full',
+  'CSI': 'Cat Sensor Interrupt',
+  'BR' : 'Bonnet Removed',
+  'P'  : 'Paused',
+  'OFF': 'Off',
+  'SDF': 'Not Ready - Drawer Full'
+}
+SENSOR_PREFIX = 'Litter-Robot '
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,6 +47,7 @@ class StatusSensor(Entity):
         """Initialize of the sensor."""
         self._robot = robot
         self._controller = controller
+        self._name = SENSOR_PREFIX + robot['litterRobotNickname'] + ' status'
 
     @property
     def icon(self):
@@ -43,17 +56,18 @@ class StatusSensor(Entity):
     @property
     def name(self):
         """Return the state of the sensor."""
-        return 'Litter-Robot Status'
+        return self._name
 
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self._robot['unitStatus']
+        unit_status = self._robot['unitStatus']
+        return LITTER_ROBOT_UNIT_STATUS[unit_status]
 
     @property
     def unit_of_measurement(self):
         """Return the unit_of_measurement of the device."""
-        return 'STATE'
+        return None
 
     def update(self):
         """Update the state from the sensor."""
@@ -69,6 +83,7 @@ class WasteGaugeSensor(Entity):
         """Initialize of the sensor."""
         self._robot = robot
         self._controller = controller
+        self._name = SENSOR_PREFIX + robot['litterRobotNickname'] + ' waste'
 
     @property
     def icon(self):
@@ -77,7 +92,7 @@ class WasteGaugeSensor(Entity):
     @property
     def name(self):
         """Return the state of the sensor."""
-        return 'Litter-Robot Waste'
+        return self._name
 
     @property
     def state(self):
