@@ -2,7 +2,7 @@
 
 The `litter-robot` component offers integration with the [Litter-Robot](https://www.litter-robot.com/litter-robot-iii-open-air-with-connect.html) WiFi enabled devices to [Home Assistant](https://www.home-assistant.io/).
 
-![image](https://user-images.githubusercontent.com/526858/43360926-d22c234a-9276-11e8-8471-9bc8b3b7d811.png)
+![image](https://user-images.githubusercontent.com/526858/55675992-40ef6600-5880-11e9-8029-4abeeae37270.png)
 
 
 ## Install
