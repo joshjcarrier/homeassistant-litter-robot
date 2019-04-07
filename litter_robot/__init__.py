@@ -49,9 +49,7 @@ def setup(hass, config):
         return False
     hub.update_robots()
     discovery.load_platform(hass, 'sensor', DOMAIN, {}, config)
-    # for component in ('sensor'):
-    #     discovery.load_platform(hass, component, DOMAIN, {}, config)
-
+    
     return True
 
 
@@ -75,6 +73,10 @@ class LitterRobotConnection:
         response_json = response.json()
         return response_json
 
+    def dispatch_command(self, robot_id, command):
+        requests.post('https://muvnkjeut7.execute-api.us-east-1.amazonaws.com/staging/users/' + self._user_id + '/litter-robots/' + robot_id + '/dispatch-commands', json={
+                                'command': command, 'litterRobotId': robot_id }, headers={'x-api-key': self._x_api_key, 'Authorization': self._auth_token})
+
 
 class LitterRobotHub:
     """A My Litter-Robot hub wrapper class."""
@@ -83,8 +85,34 @@ class LitterRobotHub:
         """Initialize the Litter-Robot hub."""
         self.config = domain_config
         self._hass = hass
-        self._my_litter_robots = litter_robot_connection(
+        my_litter_robots = litter_robot_connection(
             self.config[CONF_USERNAME], self.config[CONF_PASSWORD], self.config[CONF_X_API_KEY])
+        self._my_litter_robots = my_litter_robots
+
+        def handle_nightlight_turn_on(call):
+            try:
+                robot_id = hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
+                my_litter_robots.dispatch_command(robot_id, '<N1')
+            except:
+                _LOGGER.error("Unable to send <N1 command to Litter-Robot API")
+        
+        def handle_nightlight_turn_off(call):
+            try:
+                robot_id = hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
+                my_litter_robots.dispatch_command(robot_id, '<N0')
+            except:
+                _LOGGER.error("Unable to send <N0 command to Litter-Robot API")
+
+        def handle_cycle(call):
+            try:
+                robot_id = hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
+                my_litter_robots.dispatch_command(robot_id, '<C')
+            except:
+                _LOGGER.error("Unable to send <C command to Litter-Robot API")
+
+        hass.services.register(DOMAIN, 'nightlight_turn_on', handle_nightlight_turn_on)
+        hass.services.register(DOMAIN, 'nightlight_turn_off', handle_nightlight_turn_off)
+        hass.services.register(DOMAIN, 'cycle', handle_cycle)
 
     def login(self):
         """Login to My Litter-Robot."""
