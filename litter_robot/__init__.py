@@ -93,6 +93,7 @@ class LitterRobotHub:
             try:
                 robot_id = hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
                 my_litter_robots.dispatch_command(robot_id, '<N1')
+                hass.data[DOMAIN][LITTER_ROBOTS][0]['nightLightActive'] = '1'
             except:
                 _LOGGER.error("Unable to send <N1 command to Litter-Robot API")
         
@@ -100,6 +101,7 @@ class LitterRobotHub:
             try:
                 robot_id = hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
                 my_litter_robots.dispatch_command(robot_id, '<N0')
+                hass.data[DOMAIN][LITTER_ROBOTS][0]['nightLightActive'] = '0'
             except:
                 _LOGGER.error("Unable to send <N0 command to Litter-Robot API")
 

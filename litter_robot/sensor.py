@@ -36,6 +36,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     for robot in hass.data[LITTER_ROBOT_DOMAIN][LITTER_ROBOTS]:
         devices.append(StatusSensor(robot, controller))
         devices.append(WasteGaugeSensor(robot, controller))
+        devices.append(NightLightStatusSensor(robot, controller))
 
     add_devices(devices, True)
 
@@ -109,6 +110,40 @@ class WasteGaugeSensor(Entity):
     def unit_of_measurement(self):
         """Return the unit_of_measurement of the device."""
         return '%'
+
+    def update(self):
+        """Update the state from the sensor."""
+        robots = self._controller.update_robots()
+        if robots is not None:
+            self._robot = robots[0]
+
+class NightLightStatusSensor(Entity):
+    """Representation of the night light status sensor."""
+
+    def __init__(self, robot, controller):
+        """Initialize of the sensor."""
+        self._robot = robot
+        self._controller = controller
+        self._name = SENSOR_PREFIX + robot['litterRobotNickname'] + ' nightlight'
+
+    @property
+    def icon(self):
+        return 'mdi:lightbulb-on' if self.state == 'On' else 'mdi:lightbulb'
+
+    @property
+    def name(self):
+        """Return the state of the sensor."""
+        return self._name
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        return 'On' if self._robot['nightLightActive'] != '0' else 'Off'
+
+    @property
+    def unit_of_measurement(self):
+        """Return the unit_of_measurement of the device."""
+        return None
 
     def update(self):
         """Update the state from the sensor."""

@@ -25,23 +25,17 @@ litter_robot:
 switch:
   - platform: template
     switches:
-      litter_robot_nightlight_on:
-        friendly_name: "Tesla Meowdel S Night Light On"
-        value_template: false
-        icon_template: "mdi:lightbulb-on"
+      litter_robot_nightlight:
+        friendly_name: "Tesla Meowdel S Night Light"
+        value_template: "{{ is_state('sensor.litter_robot_tesla_meowdel_s_nightlight', 'On') }}"
+        icon_template: "mdi:lightbulb"
         turn_on:
           service: litter_robot.nightlight_turn_on
         turn_off:
-      litter_robot_nightlight_off:
-        friendly_name: "Tesla Meowdel S Night Light Off"
-        value_template: false
-        icon_template: "mdi:lightbulb"
-        turn_on:
           service: litter_robot.nightlight_turn_off
-        turn_off:
       litter_robot_cycle:
         friendly_name: "Tesla Meowdel S Cycle"
-        value_template: false
+        value_template: "{{ is_state('sensor.litter_robot_tesla_meowdel_s_status', 'Clean Cycling') }}"
         icon_template: "mdi:refresh"
         turn_on:
           service: litter_robot.cycle
@@ -64,8 +58,7 @@ Tesla Meowdel S:
     - sensor.litter_robot_tesla_meowdel_s_status
     - sensor.litter_robot_tesla_meowdel_s_waste
     - switch.litter_robot_cycle
-    - switch.litter_robot_nightlight_on
-    - switch.litter_robot_nightlight_off
+    - switch.litter_robot_nightlight
 ```
 
 Then reload Groups config. This is easiest done with the frontend Configuration -> General -> Configuration reloading -> Reload groups.
@@ -141,7 +134,6 @@ Watch `/config/home-assistant.log`, which is accessible from the frontend via De
 ## TODO
 
 * [More sensors](https://community.smartthings.com/t/litter-robot-connect/106882/19)
-  * Night light status
   * Mark drawer empty
 * Multiple robots
   * Sensors uniquely identify robot
