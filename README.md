@@ -2,7 +2,7 @@
 
 The `litter-robot` component offers integration with the [Litter-Robot](https://www.litter-robot.com/litter-robot-iii-open-air-with-connect.html) WiFi enabled devices to [Home Assistant](https://www.home-assistant.io/).
 
-![image](https://user-images.githubusercontent.com/526858/55680400-fbf22080-58cd-11e9-81de-9ea2aeff5bd9.png)
+![image](https://user-images.githubusercontent.com/526858/55689115-c8e37780-5935-11e9-979d-298452e87054.png)
 
 
 ## Install
@@ -130,6 +130,23 @@ Watch `/config/home-assistant.log`, which is accessible from the frontend via De
 "<L1" == Turn on panel lock
 "<L0" == Turn off panel lock
 ```
+
+### Settings & Resetting Tray
+
+`PATCH /users/:user_id/litter-robots/:robot_id`
+
+body: 
+```json
+{
+	"litterRobotSerial": "LR3C000000",
+	"cyclesAfterDrawerFull": "0",
+	"litterRobotNickname": "Tesla Meowdel S",
+	"cycleCount": "0",
+	"cycleCapacity": "46"
+}
+```
+
+Response is one full robot entity.
 
 ## TODO
 
