@@ -15,8 +15,8 @@ LITTER_ROBOTS = 'litter_robots'
 LITTER_ROBOT_UNIT_STATUS = {
   'RDY': 'Ready',
   'CCP': 'Clean Cycling',
-  'CCC': 'Clean Cycle Completed',
-  'DF1': 'Ready - Drawer Full',
+  'CCC': 'Ready',
+  'DF1': 'Ready - Drawer Warning',
   'CSI': 'Cat Sensor Interrupt',
   'BR' : 'Bonnet Removed',
   'P'  : 'Paused',
@@ -61,7 +61,13 @@ class StatusSensor(Entity):
     @property
     def state(self):
         """Return the state of the sensor."""
+        sleep_mode_active = self._robot['sleepModeActive']
         unit_status = self._robot['unitStatus']
+        if sleep_mode_active != '0' and unit_status == 'RDY':
+            # over 8 hours since last sleep 
+            if int(sleep_mode_active[1:].split(':')[0]) < 8:
+                return 'Sleeping'
+        
         return LITTER_ROBOT_UNIT_STATUS[unit_status]
 
     @property

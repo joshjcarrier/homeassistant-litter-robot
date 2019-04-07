@@ -75,12 +75,74 @@ Then reload Groups config. This is easiest done with the frontend Configuration 
 
 Watch `/config/home-assistant.log`, which is accessible from the frontend via Developer tools -> (i) (/dev-info).
 
+### State
+
+`GET /users/:user_id/litter-robots`
+
+```json
+[{
+	"powerStatus": "AC",
+	"sleepModeStartTime": "0",
+	"lastSeen": "2019-01-01T00:00:00.000000",
+	"sleepModeEndTime": "0",
+	"autoOfflineDisabled": true,
+	"setupDate": "2018-01-01T00:00:00.000000",
+	"DFICycleCount": "0",
+	"cleanCycleWaitTimeMinutes": "3",
+	"unitStatus": "RDY",
+	"isOnboarded": true,
+	"deviceType": "udp",
+	"litterRobotNickname": "Tesla Meowdel S",
+	"cycleCount": "67",
+	"panelLockActive": "0",
+	"cyclesAfterDrawerFull": "0",
+	"litterRobotSerial": "LR3C000000",
+	"cycleCapacity": "46",
+	"litterRobotId": "xxxxxxxxxxxxxx",
+	"nightLightActive": "0",
+	"didNotifyOffline": false,
+	"isDFITriggered": "0",
+	"sleepModeActive": "110:33:14"
+}]
+```
+
+* `sleepModeActive`: either "0" or "1HH:mm:ss" where HH:mm:ss is number of hours, minutes and seconds since last sleep started. Sleep mode is between "100:00:00" and "108:00:00" (8 hours).
+
+* `unitStatus`: is one of:
+```
+"RDY" == Unit ready to be used.
+"CCP" == Cleaning Cycle in Progress
+"CCC" == Cleaning Cycle Completed
+"DF1" == Drawer is Full -- But it is able to cycle a few more times.
+"CSI" == Cat sensor interrupt
+"BR" == Bonnet removed
+"P" == Unit is Paused
+"OFF" == Unit is turned off
+"SDF" == Drawer is completely full and will not cycle. 
+```
+
+### Commands
+
+```
+"<C" == Start cleaning cycle
+"<W7" == Set wait time to 7 minutes
+"<W3" == Set wait time to 3 minutes
+"<WF" == Set wait time to 15 minutes
+"<P0" == Turn off
+"<P1" == Turn on
+"<N1" == Turn on night light
+"<N0" == Turn off night light
+"<S0" == Turn off sleep mode
+"<S119:45:02" == Turn on sleep mode, followed by number of hours, minutes, and seconds since last sleep started. E.g. 19 hours, 45 min, 2 sec.
+"<L1" == Turn on panel lock
+"<L0" == Turn off panel lock
+```
 
 ## TODO
 
 * [More sensors](https://community.smartthings.com/t/litter-robot-connect/106882/19)
-  * Sleep mode as part of state
   * Night light status
+  * Mark drawer empty
 * Multiple robots
   * Sensors uniquely identify robot
 
