@@ -17,6 +17,7 @@ LITTER_ROBOT_UNIT_STATUS = {
   'CCP': 'Clean Cycling',
   'CCC': 'Ready',
   'DF1': 'Ready - Drawer Warning',
+  'DF2': 'Ready - Drawer Warning',
   'CSI': 'Cat Sensor Interrupt',
   'CST': 'Cat Sensor Timing',
   'BR' : 'Bonnet Removed',
