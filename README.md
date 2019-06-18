@@ -107,6 +107,7 @@ Watch `/config/home-assistant.log`, which is accessible from the frontend via De
 "CCP" == Cleaning Cycle in Progress
 "CCC" == Cleaning Cycle Completed
 "DF1" == Drawer is Full -- But it is able to cycle a few more times.
+"DF2" == Drawer is Full -- But it is still able to cycle a few more times.
 "CST" == Cat sensor timing
 "CSI" == Cat sensor interrupt
 "BR" == Bonnet removed
