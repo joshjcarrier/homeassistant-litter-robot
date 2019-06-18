@@ -2,6 +2,10 @@
 
 The `litter-robot` component offers integration with the [Litter-Robot](https://www.litter-robot.com/litter-robot-iii-open-air-with-connect.html) WiFi enabled devices to [Home Assistant](https://www.home-assistant.io/).
 
+> 🍻 I'm not employed by Litter Robot, and provide this plugin purely for our own enjoyment. 
+>
+> Use [my referal code](http://share.litter-robot.com/rmc2b) and get $25 off your own robot (and it tips me too!) 
+
 ![image](https://user-images.githubusercontent.com/526858/55689115-c8e37780-5935-11e9-979d-298452e87054.png)
 
 
@@ -12,7 +16,9 @@ Load this component by copying the entire directory as described in https://deve
 
 ## Config
 
-You'll need to have connected to your robot at least once before with the mobile app. Check out [this thread](https://community.smartthings.com/t/litter-robot-connect/106882/18) for more details.
+You'll need to have connected to your robot at least once before with the mobile app. 
+
+🔑 Trouble finding the API key? Search for `x-api-key` in [this thread](https://community.smartthings.com/t/litter-robot-connect/106882/18) for more details.
 
 Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 
@@ -20,7 +26,7 @@ Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 litter_robot:
   username: "<your litter-robot open connect email>"
   password: "<your password>"
-  api_key: "<your mobile app's API key>"
+  api_key: "<litter robot app API key>"
 
 switch:
   - platform: template
