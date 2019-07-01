@@ -3,7 +3,7 @@
   "name": "litter_robot",
   "documentation": "",
   "dependencies": [],
-  "codeowners": ["@mnestor"],
+  "codeowners": ["@joshjcarrier"],
   "requirements": [],
   "homeassistant": "0.95.4"
 }
