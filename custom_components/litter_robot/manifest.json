@@ -1,6 +1,6 @@
 {
-  "domain": "homeassistant-litter-robot",
-  "name": "homeassistant-litter-robot",
+  "domain": "litter_robot",
+  "name": "litter_robot",
   "documentation": "",
   "dependencies": [],
   "codeowners": ["@mnestor"],
