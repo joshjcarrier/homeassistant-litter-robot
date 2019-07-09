@@ -23,7 +23,8 @@ LITTER_ROBOT_UNIT_STATUS = {
   'BR' : 'Bonnet Removed',
   'P'  : 'Paused',
   'OFF': 'Off',
-  'SDF': 'Not Ready - Drawer Full'
+  'SDF': 'Not Ready - Drawer Full',
+  'DFS': 'Not Ready - Drawer Full'
 }
 SENSOR_PREFIX = 'Litter-Robot '
 
