@@ -119,7 +119,8 @@ Watch `/config/home-assistant.log`, which is accessible from the frontend via De
 "BR" == Bonnet removed
 "P" == Unit is Paused
 "OFF" == Unit is turned off
-"SDF" == Drawer is completely full and will not cycle. 
+"SDF" == Drawer is completely full and will not cycle.
+"DFS" == Drawer is completely full and will not cycle. 
 ```
 
 ### Commands
