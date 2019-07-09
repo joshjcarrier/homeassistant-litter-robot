@@ -1,0 +1,9 @@
+{
+  "domain": "litter_robot",
+  "name": "litter_robot",
+  "documentation": "",
+  "dependencies": [],
+  "codeowners": ["@joshjcarrier"],
+  "requirements": [],
+  "homeassistant": "0.95.4"
+}
