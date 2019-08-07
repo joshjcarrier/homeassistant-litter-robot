@@ -1,0 +1,13 @@
+# Describes the format for available services for litter_robot
+
+nightlight_turn_on:
+  description: >
+    Turn nightlight on
+
+nightlight_turn_off:
+  description: >
+    Turn nightlight off
+
+cycle:
+  description: >
+    Start cleaning cycle
