@@ -1,24 +1,20 @@
-# Litter-Robot 
+# Litter-Robot
 
 The `litter-robot` component offers integration with the [Litter-Robot](https://www.litter-robot.com/litter-robot-iii-open-air-with-connect.html) WiFi enabled devices to [Home Assistant](https://www.home-assistant.io/).
 
-> 🍻 I'm not employed by Litter Robot, and provide this plugin purely for our own enjoyment. 
+> 🍻 I'm not employed by Litter Robot, and provide this plugin purely for our own enjoyment.
 >
-> Use [my referal code](http://share.litter-robot.com/rmc2b) and get $25 off your own robot (and it tips me too!) 
+> Use [my referal code](http://share.litter-robot.com/rmc2b) and get \$25 off your own robot (and it tips me too!)
 
 ![image](https://user-images.githubusercontent.com/526858/55689115-c8e37780-5935-11e9-979d-298452e87054.png)
-
 
 ## Install
 
 Load this component by copying the entire directory as described in https://developers.home-assistant.io/docs/en/creating_component_loading.html . This is easiest with the Samba share add-on.
 
-
 ## Config
 
-You'll need to have connected to your robot at least once before with the mobile app. 
-
-🔑 Trouble finding the API key? Search for `x-api-key` in [this thread](https://community.smartthings.com/t/litter-robot-connect/106882/18) for more details.
+You'll need to have connected to your robot at least once before with the mobile app.
 
 Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 
@@ -26,7 +22,7 @@ Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 litter_robot:
   username: "<your litter-robot open connect email>"
   password: "<your password>"
-  api_key: "<litter robot app API key>"
+  api_key: "Gmdfw5Cq3F3Mk6xvvO0inHATJeoDv6C3KfwfOuh0"
 
 switch:
   - platform: template
@@ -50,6 +46,7 @@ switch:
 
 Restart HASS to activate the component and to reapply config changes. This can be done from the frontend via Configuration -> General -> Server management -> Restart.
 
+🔑 _Wondering where the API key came from?_ Search for the text `x-api-key` within [this Python script](https://community.smartthings.com/t/litter-robot-connect/106882/18).
 
 ## Grouping Sensors
 
@@ -69,6 +66,16 @@ Tesla Meowdel S:
 
 Then reload Groups config. This is easiest done with the frontend Configuration -> General -> Configuration reloading -> Reload groups.
 
+## Multiple robots
+
+The sensors will automatically provision themselves, but to control individual robots you'll need to specify a `data` section in the service call. The `litter_robot_id` should match the Litter Robot API ID and can be found in the Developer Tools -> States tab for the `litter_robot_..._status` sensor.
+
+```yml
+turn_on:
+  service: litter_robot.nightlight_turn_on
+  data:
+    litter_robot_id: a00bb111cccca
+```
 
 ## Development
 
@@ -79,35 +86,38 @@ Watch `/config/home-assistant.log`, which is accessible from the frontend via De
 `GET /users/:user_id/litter-robots`
 
 ```json
-[{
-	"powerStatus": "AC",
-	"sleepModeStartTime": "0",
-	"lastSeen": "2019-01-01T00:00:00.000000",
-	"sleepModeEndTime": "0",
-	"autoOfflineDisabled": true,
-	"setupDate": "2018-01-01T00:00:00.000000",
-	"DFICycleCount": "0",
-	"cleanCycleWaitTimeMinutes": "3",
-	"unitStatus": "RDY",
-	"isOnboarded": true,
-	"deviceType": "udp",
-	"litterRobotNickname": "Tesla Meowdel S",
-	"cycleCount": "67",
-	"panelLockActive": "0",
-	"cyclesAfterDrawerFull": "0",
-	"litterRobotSerial": "LR3C000000",
-	"cycleCapacity": "46",
-	"litterRobotId": "xxxxxxxxxxxxxx",
-	"nightLightActive": "0",
-	"didNotifyOffline": false,
-	"isDFITriggered": "0",
-	"sleepModeActive": "110:33:14"
-}]
+[
+  {
+    "powerStatus": "AC",
+    "sleepModeStartTime": "0",
+    "lastSeen": "2019-01-01T00:00:00.000000",
+    "sleepModeEndTime": "0",
+    "autoOfflineDisabled": true,
+    "setupDate": "2018-01-01T00:00:00.000000",
+    "DFICycleCount": "0",
+    "cleanCycleWaitTimeMinutes": "3",
+    "unitStatus": "RDY",
+    "isOnboarded": true,
+    "deviceType": "udp",
+    "litterRobotNickname": "Tesla Meowdel S",
+    "cycleCount": "67",
+    "panelLockActive": "0",
+    "cyclesAfterDrawerFull": "0",
+    "litterRobotSerial": "LR3C000000",
+    "cycleCapacity": "46",
+    "litterRobotId": "xxxxxxxxxxxxxx",
+    "nightLightActive": "0",
+    "didNotifyOffline": false,
+    "isDFITriggered": "0",
+    "sleepModeActive": "110:33:14"
+  }
+]
 ```
 
-* `sleepModeActive`: either "0" or "1HH:mm:ss" where HH:mm:ss is number of hours, minutes and seconds since last sleep started. Sleep mode is between "100:00:00" and "108:00:00" (8 hours).
+- `sleepModeActive`: either "0" or "1HH:mm:ss" where HH:mm:ss is number of hours, minutes and seconds since last sleep started. Sleep mode is between "100:00:00" and "108:00:00" (8 hours).
 
-* `unitStatus`: is one of:
+- `unitStatus`: is one of:
+
 ```
 "RDY" == Unit ready to be used.
 "CCP" == Cleaning Cycle in Progress
@@ -120,7 +130,7 @@ Watch `/config/home-assistant.log`, which is accessible from the frontend via De
 "P" == Unit is Paused
 "OFF" == Unit is turned off
 "SDF" == Drawer is completely full and will not cycle.
-"DFS" == Drawer is completely full and will not cycle. 
+"DFS" == Drawer is completely full and will not cycle.
 ```
 
 ### Commands
@@ -144,14 +154,15 @@ Watch `/config/home-assistant.log`, which is accessible from the frontend via De
 
 `PATCH /users/:user_id/litter-robots/:robot_id`
 
-body: 
+body:
+
 ```json
 {
-	"litterRobotSerial": "LR3C000000",
-	"cyclesAfterDrawerFull": "0",
-	"litterRobotNickname": "Tesla Meowdel S",
-	"cycleCount": "0",
-	"cycleCapacity": "46"
+  "litterRobotSerial": "LR3C000000",
+  "cyclesAfterDrawerFull": "0",
+  "litterRobotNickname": "Tesla Meowdel S",
+  "cycleCount": "0",
+  "cycleCapacity": "46"
 }
 ```
 
@@ -159,8 +170,5 @@ Response is one full robot entity.
 
 ## TODO
 
-* [More sensors](https://community.smartthings.com/t/litter-robot-connect/106882/19)
-  * Mark drawer empty
-* Multiple robots
-  * Sensors uniquely identify robot
-
+- [More sensors](https://community.smartthings.com/t/litter-robot-connect/106882/19)
+  - Mark drawer empty

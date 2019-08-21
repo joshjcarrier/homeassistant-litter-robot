@@ -3,11 +3,23 @@
 nightlight_turn_on:
   description: >
     Turn nightlight on
+  fields:
+    litter_robot_id:
+      description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
+      example: "a00bb111cccca"
 
 nightlight_turn_off:
   description: >
     Turn nightlight off
+  fields:
+    litter_robot_id:
+      description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
+      example: "a00bb111cccca"
 
 cycle:
   description: >
     Start cleaning cycle
+  fields:
+    litter_robot_id:
+      description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
+      example: "a00bb111cccca"
