@@ -36,6 +36,17 @@ CONFIG_SCHEMA = vol.Schema({
     })
 }, extra=vol.ALLOW_EXTRA)
 
+SERVICE_NIGHTLIGHT_TURN_ON_SCHEMA = vol.Schema(
+    {vol.Optional('litter_robot_id'): cv.string}
+)
+
+SERVICE_NIGHTLIGHT_TURN_OFF_SCHEMA = vol.Schema(
+    {vol.Optional('litter_robot_id'): cv.string}
+)
+
+SERVICE_CYCLE_SCHEMA = vol.Schema(
+    {vol.Optional('litter_robot_id'): cv.string}
+)
 
 def setup(hass, config):
     """Set up the Litter-Robot component."""
@@ -89,32 +100,41 @@ class LitterRobotHub:
             self.config[CONF_USERNAME], self.config[CONF_PASSWORD], self.config[CONF_X_API_KEY])
         self._my_litter_robots = my_litter_robots
 
+        def get_litter_robot_id(self, call_data):
+            litter_robot_id = call_data.get('litter_robot_id', None)
+            if litter_robot_id is not None:
+                return [x for x in self._hass.data[DOMAIN][LITTER_ROBOTS] if x['litterRobotId'] == litter_robot_id][0]['litterRobotId']
+            return self._hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
+
+        def set_litter_robot_state(self, litter_robot_id, key, value):
+            [x for x in self._hass.data[DOMAIN][LITTER_ROBOTS] if x['litterRobotId'] == litter_robot_id][0][key] = value
+
         def handle_nightlight_turn_on(call):
             try:
-                robot_id = hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
+                robot_id = get_litter_robot_id(self, call.data)
                 my_litter_robots.dispatch_command(robot_id, '<N1')
-                hass.data[DOMAIN][LITTER_ROBOTS][0]['nightLightActive'] = '1'
-            except:
-                _LOGGER.error("Unable to send <N1 command to Litter-Robot API")
+                set_litter_robot_state(self, robot_id, 'nightLightActive', '1')
+            except Exception as ex:
+                _LOGGER.error("Unable to send <N1 command to Litter-Robot API %s", ex)
         
         def handle_nightlight_turn_off(call):
             try:
-                robot_id = hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
+                robot_id = get_litter_robot_id(self, call.data)
                 my_litter_robots.dispatch_command(robot_id, '<N0')
-                hass.data[DOMAIN][LITTER_ROBOTS][0]['nightLightActive'] = '0'
-            except:
-                _LOGGER.error("Unable to send <N0 command to Litter-Robot API")
+                set_litter_robot_state(self, robot_id, 'nightLightActive', '0')
+            except Exception as ex:
+                _LOGGER.error("Unable to send <N0 command to Litter-Robot API %s", ex)
 
         def handle_cycle(call):
             try:
-                robot_id = hass.data[DOMAIN][LITTER_ROBOTS][0]['litterRobotId']
+                robot_id = get_litter_robot_id(self, call.data)
                 my_litter_robots.dispatch_command(robot_id, '<C')
-            except:
-                _LOGGER.error("Unable to send <C command to Litter-Robot API")
+            except Exception as ex:
+                _LOGGER.error("Unable to send <C command to Litter-Robot API %s", ex)
 
-        hass.services.register(DOMAIN, 'nightlight_turn_on', handle_nightlight_turn_on)
-        hass.services.register(DOMAIN, 'nightlight_turn_off', handle_nightlight_turn_off)
-        hass.services.register(DOMAIN, 'cycle', handle_cycle)
+        hass.services.register(DOMAIN, 'nightlight_turn_on', handle_nightlight_turn_on, SERVICE_NIGHTLIGHT_TURN_ON_SCHEMA)
+        hass.services.register(DOMAIN, 'nightlight_turn_off', handle_nightlight_turn_off, SERVICE_NIGHTLIGHT_TURN_OFF_SCHEMA)
+        hass.services.register(DOMAIN, 'cycle', handle_cycle, SERVICE_CYCLE_SCHEMA)
 
     def login(self):
         """Login to My Litter-Robot."""

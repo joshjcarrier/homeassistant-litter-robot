@@ -63,6 +63,13 @@ class StatusSensor(Entity):
         return self._name
 
     @property
+    def device_state_attributes(self):
+        """Return information about the device."""
+        return {
+            "litter_robot_id": self._robot['litterRobotId']
+        }
+
+    @property
     def state(self):
         """Return the state of the sensor."""
         sleep_mode_active = self._robot['sleepModeActive']
@@ -83,7 +90,7 @@ class StatusSensor(Entity):
         """Update the state from the sensor."""
         robots = self._controller.update_robots()
         if robots is not None:
-            self._robot = robots[0]
+            self._robot = [x for x in robots if x['litterRobotId'] == self._robot['litterRobotId']][0]
 
 
 class WasteGaugeSensor(Entity):
@@ -118,7 +125,7 @@ class WasteGaugeSensor(Entity):
         """Update the state from the sensor."""
         robots = self._controller.update_robots()
         if robots is not None:
-            self._robot = robots[0]
+            self._robot = [x for x in robots if x['litterRobotId'] == self._robot['litterRobotId']][0]
 
 class NightLightStatusSensor(Entity):
     """Representation of the night light status sensor."""
@@ -152,4 +159,4 @@ class NightLightStatusSensor(Entity):
         """Update the state from the sensor."""
         robots = self._controller.update_robots()
         if robots is not None:
-            self._robot = robots[0]
+            self._robot = [x for x in robots if x['litterRobotId'] == self._robot['litterRobotId']][0]
