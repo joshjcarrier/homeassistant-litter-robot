@@ -15,7 +15,7 @@ LITTER_ROBOTS = 'litter_robots'
 LITTER_ROBOT_UNIT_STATUS = {
   'RDY': 'Ready',
   'CCP': 'Clean Cycling',
-  'CCC': 'Ready',
+  'CCC': 'Ready - Clean Cycling Complete',
   'DF1': 'Ready - Drawer Warning',
   'DF2': 'Ready - Drawer Warning',
   'CSI': 'Cat Sensor Interrupt',
