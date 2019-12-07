@@ -22,7 +22,6 @@ Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 litter_robot:
   username: "<your litter-robot open connect email>"
   password: "<your password>"
-  api_key: "Gmdfw5Cq3F3Mk6xvvO0inHATJeoDv6C3KfwfOuh0"
 
 switch:
   - platform: template
@@ -45,8 +44,6 @@ switch:
 ```
 
 Restart HASS to activate the component and to reapply config changes. This can be done from the frontend via Configuration -> General -> Server management -> Restart.
-
-🔑 _Wondering where the API key came from?_ Search for the text `x-api-key` within [this Python script](https://community.smartthings.com/t/litter-robot-connect/106882/18).
 
 ## Grouping Sensors
 
@@ -79,11 +76,54 @@ turn_on:
 
 ## Development
 
-Watch `/config/home-assistant.log`, which is accessible from the frontend via Developer tools -> (i) (/dev-info).
+Watch `/config/home-assistant.log`, which is accessible from the frontend via Developer tools -> (i) (/developer-tools/logs).
+
+### Authentication
+
+`POST https://autopets.sso.iothings.site/oauth/token`
+
+**Security**: none
+
+**Example request body (application/x-www-form-encoded)**:
+
+| Key           | Value                     |
+| ------------- | ------------------------- |
+| client_id     | \<extracted from iOS app> |
+| client_secret | \<extracted from iOS app> |
+| grant_type    | password                  |
+| username      | \<username, form encoded> |
+| password      | \<password, form encoded> |
+
+**Example response body (application/json)**:
+
+```json
+{
+  "token_type": "Bearer",
+  "access_token": "<jwt>",
+  "refresh_token": "<refresh token>",
+  "expires_in": 3600
+}
+```
+
+_Decoded JWT_:
+
+```json
+{
+  "userId": "<user id>",
+  ...
+}
+```
+
+- \<jwt> is used as Authorization header value
+- x-api-key is extracted from iOS app
 
 ### State
 
-`GET /users/:user_id/litter-robots`
+`GET https://v2.api.whisker.iothings.site/users/:user_id/robots`
+
+**Security**: `Authorization`, `x-api-key`
+
+**Example response body**:
 
 ```json
 [
@@ -118,41 +158,56 @@ Watch `/config/home-assistant.log`, which is accessible from the frontend via De
 
 - `unitStatus`: is one of:
 
-```
-"RDY" == Unit ready to be used.
-"CCP" == Cleaning Cycle in Progress
-"CCC" == Cleaning Cycle Completed
-"DF1" == Drawer is Full -- But it is able to cycle a few more times.
-"DF2" == Drawer is Full -- But it is still able to cycle a few more times.
-"CST" == Cat sensor timing
-"CSI" == Cat sensor interrupt
-"BR" == Bonnet removed
-"P" == Unit is Paused
-"OFF" == Unit is turned off
-"SDF" == Drawer is completely full and will not cycle.
-"DFS" == Drawer is completely full and will not cycle.
-```
+| Unit Status | Definition                                                        |
+| ----------- | ----------------------------------------------------------------- |
+| RDY         | Unit ready to be used.                                            |
+| CCP         | Cleaning Cycle in Progress                                        |
+| CCC         | Cleaning Cycle Completed                                          |
+| DF1         | Drawer is Full -- But it is able to cycle a few more times.       |
+| DF2         | Drawer is Full -- But it is still able to cycle a few more times. |
+| CST         | Cat sensor timing                                                 |
+| CSI         | Cat sensor interrupt                                              |
+| BR"         | Bonnet removed                                                    |
+| P"          | Unit is Paused                                                    |
+| OFF         | Unit is turned off                                                |
+| SDF         | Drawer is completely full and will not cycle.                     |
+| DFS         | Drawer is completely full and will not cycle.                     |
 
 ### Commands
 
+`POST https://v2.api.whisker.iothings.site/users/:user_id/robots/:robot_id/dispatch-commands`
+
+**Security**: `Authorization`, `x-api-key`
+
+**Request body (application/json)**:
+
+```json
+{
+  "litterRobotId": "<litter robot id>",
+  "command": "<command>"
+}
 ```
-"<C" == Start cleaning cycle
-"<W7" == Set wait time to 7 minutes
-"<W3" == Set wait time to 3 minutes
-"<WF" == Set wait time to 15 minutes
-"<P0" == Turn off
-"<P1" == Turn on
-"<N1" == Turn on night light
-"<N0" == Turn off night light
-"<S0" == Turn off sleep mode
-"<S119:45:02" == Turn on sleep mode, followed by number of hours, minutes, and seconds since last sleep started. E.g. 19 hours, 45 min, 2 sec.
-"<L1" == Turn on panel lock
-"<L0" == Turn off panel lock
-```
+
+| Command     | Action                                                                                                                                  |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| <C          | Start cleaning cycle                                                                                                                    |
+| <W7         | Set wait time to 7 minutes                                                                                                              |
+| <W3         | Set wait time to 3 minutes                                                                                                              |
+| <WF         | Set wait time to 15 minutes                                                                                                             |
+| <P0         | Turn off                                                                                                                                |
+| <P1         | Turn on                                                                                                                                 |
+| <N1         | Turn on night light                                                                                                                     |
+| <N0         | Turn off night light                                                                                                                    |
+| <S0         | Turn off sleep mode                                                                                                                     |
+| <S119:45:02 | Turn on 8 hour sleep mode, offset by number of hours, minutes, and seconds since last sleep should start. E.g. 19 hours, 45 min, 2 sec. |
+| <L1         | Turn on panel lock                                                                                                                      |
+| <L0         | Turn off panel lock                                                                                                                     |
+
+Response is one full robot entity.
 
 ### Settings & Resetting Tray
 
-`PATCH /users/:user_id/litter-robots/:robot_id`
+`PATCH https://v2.api.whisker.iothings.site/users/:user_id/robots/:robot_id`
 
 body:
 
