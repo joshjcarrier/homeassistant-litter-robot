@@ -167,8 +167,8 @@ _Decoded JWT_:
 | DF2         | Drawer is Full -- But it is still able to cycle a few more times. |
 | CST         | Cat sensor timing                                                 |
 | CSI         | Cat sensor interrupt                                              |
-| BR"         | Bonnet removed                                                    |
-| P"          | Unit is Paused                                                    |
+| BR          | Bonnet removed                                                    |
+| P           | Unit is Paused                                                    |
 | OFF         | Unit is turned off                                                |
 | SDF         | Drawer is completely full and will not cycle.                     |
 | DFS         | Drawer is completely full and will not cycle.                     |
