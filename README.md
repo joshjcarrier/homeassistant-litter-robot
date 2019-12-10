@@ -8,20 +8,22 @@ The `litter-robot` component offers integration with the [Litter-Robot](https://
 
 ![image](https://user-images.githubusercontent.com/526858/55689115-c8e37780-5935-11e9-979d-298452e87054.png)
 
-## Install
+## Install 
 
 Load this component by copying the entire directory as described in https://developers.home-assistant.io/docs/en/creating_component_loading.html . This is easiest with the Samba share add-on.
 
-## Config
+## Setup
 
 You'll need to have connected to your robot at least once before with the mobile app.
+
+### Configuration
 
 Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 
 ```yaml
 litter_robot:
   username: "<your litter-robot open connect email>"
-  password: "<your password>"
+  password: "<your litter-robot password>"
 
 switch:
   - platform: template
@@ -43,7 +45,15 @@ switch:
         turn_off:
 ```
 
+### Finishing setup
+
 Restart HASS to activate the component and to reapply config changes. This can be done from the frontend via Configuration -> General -> Server management -> Restart.
+
+### Troubleshooting
+
+If there's a problem, the new `sensor.litter_robot_*` won't appear. This is most likely invalid configuration (see above) or a Litter Robot username/password problem. Details will be logged in the Developer Tools -> Logs section. 
+
+**Password issues:** It's been reported that resetting your Litter Robot account password might help if your password isn't being accepted, so make sure you try updating your mobile app to the latest version and resetting the password!
 
 ## Grouping Sensors
 
