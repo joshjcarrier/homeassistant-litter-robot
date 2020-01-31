@@ -151,7 +151,7 @@ class LitterRobotHub:
             _LOGGER.error("Unable to connect to Litter-Robot API")
             return False
 
-    @Throttle(timedelta(seconds=300))
+    @Throttle(timedelta(seconds=120))
     def update_robots(self):
         """Update the robot states."""
         self._hass.data[DOMAIN][LITTER_ROBOTS] = self._my_litter_robots.robots()

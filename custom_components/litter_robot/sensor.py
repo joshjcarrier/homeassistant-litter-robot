@@ -24,7 +24,8 @@ LITTER_ROBOT_UNIT_STATUS = {
   'P'  : 'Paused',
   'OFF': 'Off',
   'SDF': 'Not Ready - Drawer Full',
-  'DFS': 'Not Ready - Drawer Full'
+  'DFS': 'Not Ready - Drawer Full',
+  'CSF': 'Cat Sensor Interrupted'
 }
 SENSOR_PREFIX = 'Litter-Robot '
 
@@ -79,7 +80,7 @@ class StatusSensor(Entity):
             if int(sleep_mode_active[1:].split(':')[0]) < 8:
                 return 'Sleeping'
         
-        return LITTER_ROBOT_UNIT_STATUS[unit_status]
+        return LITTER_ROBOT_UNIT_STATUS.get(unit_status, unit_status)
 
     @property
     def unit_of_measurement(self):
