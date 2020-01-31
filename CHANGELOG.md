@@ -1,5 +1,11 @@
 # HomeAssistant Litter Robot Changelog
 
+## 2020-01-30
+
+- Unrecognized state codes reported as code instead of crashing the sensor
+- New state code "CSF"
+- Refresh interval reduced from 5 min to 2 min to catch state changes (avg cycle ~2m:30s)
+
 ## 2019-12-07
 
 - Backend API and authentication change to match latest iOS app
