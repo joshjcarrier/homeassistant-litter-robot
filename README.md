@@ -8,7 +8,7 @@ The `litter-robot` component offers integration with the [Litter-Robot](https://
 
 ![image](https://user-images.githubusercontent.com/526858/55689115-c8e37780-5935-11e9-979d-298452e87054.png)
 
-## Install 
+## Install
 
 Load this component by copying the entire directory as described in https://developers.home-assistant.io/docs/en/creating_component_loading.html . This is easiest with the Samba share add-on.
 
@@ -51,7 +51,7 @@ Restart HASS to activate the component and to reapply config changes. This can b
 
 ### Troubleshooting
 
-If there's a problem, the new `sensor.litter_robot_*` won't appear. This is most likely invalid configuration (see above) or a Litter Robot username/password problem. Details will be logged in the Developer Tools -> Logs section. 
+If there's a problem, the new `sensor.litter_robot_*` won't appear. This is most likely invalid configuration (see above) or a Litter Robot username/password problem. Details will be logged in the Developer Tools -> Logs section.
 
 **Password issues:** It's been reported that resetting your Litter Robot account password might help if your password isn't being accepted, so make sure you try updating your mobile app to the latest version and resetting the password!
 
@@ -173,6 +173,7 @@ _Decoded JWT_:
 | RDY         | Unit ready to be used.                                            |
 | CCP         | Cleaning Cycle in Progress                                        |
 | CCC         | Cleaning Cycle Completed                                          |
+| CSF         | Cat Sensor Interrupted                                            |
 | DF1         | Drawer is Full -- But it is able to cycle a few more times.       |
 | DF2         | Drawer is Full -- But it is still able to cycle a few more times. |
 | CST         | Cat sensor timing                                                 |
