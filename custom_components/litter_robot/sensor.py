@@ -5,6 +5,7 @@ https://home-assistant.io/components/
 """
 
 import logging
+from datetime import timedelta
 from homeassistant.helpers.entity import Entity
 
 DEPENDENCIES = ['litter_robot']
@@ -31,6 +32,7 @@ SENSOR_PREFIX = 'Litter-Robot '
 
 _LOGGER = logging.getLogger(__name__)
 
+SCAN_INTERVAL = timedelta(seconds=120)
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the Litter-Robot sensors."""

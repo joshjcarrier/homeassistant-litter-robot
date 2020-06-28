@@ -27,6 +27,8 @@ LITTER_ROBOTS = 'litter_robots'
 
 ATTR_CYCLE_COUNT = 'cycleCount'
 
+SCAN_INTERVAL = timedelta(seconds=120)
+
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
         vol.Required(CONF_USERNAME): cv.string,
@@ -151,7 +153,6 @@ class LitterRobotHub:
             _LOGGER.error("Unable to connect to Litter-Robot API")
             return False
 
-    @Throttle(timedelta(seconds=120))
     def update_robots(self):
         """Update the robot states."""
         self._hass.data[DOMAIN][LITTER_ROBOTS] = self._my_litter_robots.robots()
