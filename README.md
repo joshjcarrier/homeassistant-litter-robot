@@ -24,6 +24,7 @@ Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 litter_robot:
   username: "<your litter-robot open connect email>"
   password: "<your litter-robot password>"
+  scan_interval: 120
 
 switch:
   - platform: template

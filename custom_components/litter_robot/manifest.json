@@ -1,9 +1,11 @@
 {
   "domain": "litter_robot",
   "name": "litter_robot",
-  "documentation": "",
+  "documentation": "https://github.com/joshjcarrier/homeassistant-litter-robot",
   "dependencies": [],
-  "codeowners": ["@joshjcarrier"],
+  "codeowners": [
+    "@joshjcarrier"
+  ],
   "requirements": [],
-  "homeassistant": "0.95.4"
+  "homeassistant": "0.111.0"
 }
