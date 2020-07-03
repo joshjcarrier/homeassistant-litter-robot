@@ -48,6 +48,10 @@ SERVICE_CYCLE_SCHEMA = vol.Schema(
     {vol.Optional('litter_robot_id'): cv.string}
 )
 
+RESET_DRAWER_SCHEMA = vol.Schema(
+    {vol.Optional('litter_robot_id'): cv.string}
+)
+
 
 async def async_setup(hass: HomeAssistant, config: Config):
     """Set up the Litter-Robot component."""
@@ -83,12 +87,19 @@ async def async_setup(hass: HomeAssistant, config: Config):
         await asyncio.sleep(15)
         await coordinator.async_request_refresh()
 
+    async def async_reset_drawer_handler(call):
+        await litter_robot.async_reset_drawer(call.data or list(litter_robot.robots.keys())[0])
+        await asyncio.sleep(15)
+        await coordinator.async_request_refresh()
+
     hass.services.async_register(DOMAIN, 'nightlight_turn_on',
                                  async_nightlight_on_handler, SERVICE_NIGHTLIGHT_TURN_ON_SCHEMA)
     hass.services.async_register(DOMAIN, 'nightlight_turn_off',
                                  async_nightlight_off_handler, SERVICE_NIGHTLIGHT_TURN_OFF_SCHEMA)
     hass.services.async_register(
         DOMAIN, 'cycle', async_cycle_start_handler, SERVICE_CYCLE_SCHEMA)
+    hass.services.async_register(
+        DOMAIN, 'reset_drawer', async_reset_drawer_handler, RESET_DRAWER_SCHEMA)
     return True
 
 
