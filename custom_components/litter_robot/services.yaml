@@ -23,3 +23,11 @@ cycle:
     litter_robot_id:
       description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
       example: "a00bb111cccca"
+
+reset_drawer:
+  description: >
+    Reset drawer
+  fields:
+    litter_robot_id:
+      description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
+      example: "a00bb111cccca"

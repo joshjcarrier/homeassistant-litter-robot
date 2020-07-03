@@ -38,6 +38,20 @@ class LitterRobot:
     async def async_cycle_start(self, robot_id):
         await self.async_send_command(robot_id, '<C')
 
+    async def async_reset_drawer(self, robot_id):
+        try:
+            await self._async_login()
+            async with aiohttp.ClientSession() as session:
+                async with session.patch('https://v2.api.whisker.iothings.site/users/' + self._user_id + '/robots/' + robot_id,
+                                         json={'cycleCount': '0',
+                                               'cycleCapacity': '46', 'cyclesAfterDrawerFull': '0'},
+                                         headers={'x-api-key': X_API_KEY, 'Authorization': self._auth_token}) as r:
+                    if r.status >= 300:
+                        _LOGGER.error(
+                            "[reset drawer] Unexpected response: %s", r)
+        except Exception as ex:
+            _LOGGER.error("[reset drawer] Unexpected exception: %s", ex)
+
     async def async_send_command(self, robot_id, command):
         try:
             await self._async_login()

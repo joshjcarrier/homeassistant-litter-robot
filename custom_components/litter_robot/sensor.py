@@ -54,6 +54,11 @@ class LitterRobotEntity(Entity):
         self._device_info = device_info
 
     @property
+    def device_state_attributes(self):
+        """Return the device_info of the device."""
+        return self._device_info
+
+    @property
     def should_poll(self):
         """Return the polling requirement of the entity."""
         return False

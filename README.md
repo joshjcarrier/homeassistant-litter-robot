@@ -44,6 +44,13 @@ switch:
         turn_on:
           service: litter_robot.cycle
         turn_off:
+      litter_robot_reset_drawer:
+        friendly_name: "Tesla Meowdel S Reset Drawer"
+        value_template: "{{ is_state('sensor.litter_robot_tesla_meowdel_s_status', 'Clean Cycling') }}"
+        icon_template: "mdi:repeat"
+        turn_on:
+          service: litter_robot.reset_drawer
+        turn_off:
 ```
 
 ### Finishing setup
@@ -64,12 +71,12 @@ Edit `/config/groups.yaml`. For a robot nicknamed "Tesla Meowdel S":
 
 ```yaml
 Tesla Meowdel S:
-  control: hidden
   entities:
     - sensor.litter_robot_tesla_meowdel_s_status
     - sensor.litter_robot_tesla_meowdel_s_waste
     - switch.litter_robot_cycle
     - switch.litter_robot_nightlight
+    - switch.litter_robot_reset_drawer
 ```
 
 Then reload Groups config. This is easiest done with the frontend Configuration -> General -> Configuration reloading -> Reload groups.
@@ -234,8 +241,3 @@ body:
 ```
 
 Response is one full robot entity.
-
-## TODO
-
-- [More sensors](https://community.smartthings.com/t/litter-robot-connect/106882/19)
-  - Mark drawer empty
