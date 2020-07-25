@@ -13,10 +13,11 @@
     "targets": [
       {
         "type": "local",
-        "name": "hassio.local/config",
+        "name": "homeassistant.local/config",
         "description": "Volume mounted config directory of Home Assistant",
         "dir": "/Volumes/config/"
       }
     ]
-  }
+  },
+  "python.languageServer": "Microsoft"
 }
