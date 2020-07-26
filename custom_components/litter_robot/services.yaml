@@ -5,7 +5,7 @@ nightlight_turn_on:
     Turn nightlight on
   fields:
     litter_robot_id:
-      description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
+      description: ID from the Litter Robot API. Get value from the any entity state. Defaults to first robot in API response.
       example: "a00bb111cccca"
 
 nightlight_turn_off:
@@ -13,7 +13,7 @@ nightlight_turn_off:
     Turn nightlight off
   fields:
     litter_robot_id:
-      description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
+      description: ID from the Litter Robot API. Get value from the any entity state. Defaults to first robot in API response.
       example: "a00bb111cccca"
 
 cycle:
@@ -21,7 +21,7 @@ cycle:
     Start cleaning cycle
   fields:
     litter_robot_id:
-      description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
+      description: ID from the Litter Robot API. Get value from the any entity state. Defaults to first robot in API response.
       example: "a00bb111cccca"
 
 reset_drawer:
@@ -29,5 +29,28 @@ reset_drawer:
     Reset drawer
   fields:
     litter_robot_id:
-      description: ID from the Litter Robot API. Get value from the StatusSensor entity state. Defaults to first robot in API response.
+      description: ID from the Litter Robot API. Get value from the any entity state. Defaults to first robot in API response.
       example: "a00bb111cccca"
+
+sleep_enable:
+  description: >
+    Enables 8 hour sleep timeout starting at provided offset. E.g. 0:00:00 starts sleep now, 8:00:00 means sleep mode just finished at the current time.
+  fields:
+    litter_robot_id:
+      description: ID from the Litter Robot API. Get value from any entity state. Defaults to first robot in API response.
+    h:
+      description: Hours since start of sleep mode. 0 = started this hour, 8 = ended this hour, 23 = starting within the next hour.
+      example: 0
+    min:
+      description: Minutes within hour since start of sleep mode.
+      example: 0
+    s:
+      description: Seconds within minute since start of sleep mode.
+      example: 0
+
+sleep_disable:
+  description: >
+    Disables sleep mode.
+  fields:
+    litter_robot_id:
+      description: ID from the Litter Robot API. Get value from any entity state. Defaults to first robot in API response.

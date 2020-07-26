@@ -9,7 +9,7 @@ import logging
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_PASSWORD, CONF_SCAN_INTERVAL, CONF_USERNAME
+from homeassistant.const import CONF_PASSWORD, CONF_SCAN_INTERVAL, CONF_USERNAME, TIME_HOURS, TIME_MINUTES, TIME_SECONDS
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.discovery import async_load_platform
@@ -48,7 +48,20 @@ SERVICE_CYCLE_SCHEMA = vol.Schema(
     {vol.Optional('litter_robot_id'): cv.string}
 )
 
-RESET_DRAWER_SCHEMA = vol.Schema(
+SERVICE_RESET_DRAWER_SCHEMA = vol.Schema(
+    {vol.Optional('litter_robot_id'): cv.string}
+)
+
+SERVICE_SLEEP_ENABLE_SCHEMA = vol.Schema(
+    {
+        vol.Optional('litter_robot_id'): cv.string,
+        vol.Required(TIME_HOURS): cv.positive_int,
+        vol.Required(TIME_MINUTES): cv.positive_int,
+        vol.Required(TIME_SECONDS): cv.positive_int,
+    }
+)
+
+SERVICE_SLEEP_DISABLE_SCHEMA = vol.Schema(
     {vol.Optional('litter_robot_id'): cv.string}
 )
 
@@ -92,6 +105,16 @@ async def async_setup(hass: HomeAssistant, config: Config):
         await asyncio.sleep(15)
         await coordinator.async_request_refresh()
 
+    async def async_sleep_enable_handler(call):
+        await litter_robot.async_sleep_enable(call.data.get('litter_robot_id', list(litter_robot.robots.keys())[0]), call.data[TIME_HOURS], call.data[TIME_MINUTES], call.data[TIME_SECONDS])
+        await asyncio.sleep(15)
+        await coordinator.async_request_refresh()
+
+    async def async_sleep_disable_handler(call):
+        await litter_robot.async_sleep_disable(call.data or list(litter_robot.robots.keys())[0])
+        await asyncio.sleep(15)
+        await coordinator.async_request_refresh()
+
     hass.services.async_register(DOMAIN, 'nightlight_turn_on',
                                  async_nightlight_on_handler, SERVICE_NIGHTLIGHT_TURN_ON_SCHEMA)
     hass.services.async_register(DOMAIN, 'nightlight_turn_off',
@@ -99,7 +122,11 @@ async def async_setup(hass: HomeAssistant, config: Config):
     hass.services.async_register(
         DOMAIN, 'cycle', async_cycle_start_handler, SERVICE_CYCLE_SCHEMA)
     hass.services.async_register(
-        DOMAIN, 'reset_drawer', async_reset_drawer_handler, RESET_DRAWER_SCHEMA)
+        DOMAIN, 'reset_drawer', async_reset_drawer_handler, SERVICE_RESET_DRAWER_SCHEMA)
+    hass.services.async_register(
+        DOMAIN, 'sleep_enable', async_sleep_enable_handler, SERVICE_SLEEP_ENABLE_SCHEMA)
+    hass.services.async_register(
+        DOMAIN, 'sleep_disable', async_sleep_disable_handler, SERVICE_SLEEP_DISABLE_SCHEMA)
     return True
 
 

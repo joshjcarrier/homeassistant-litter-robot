@@ -42,6 +42,12 @@ class LitterRobot:
     async def async_cycle_start(self, robot_id):
         await self.async_send_command(robot_id, '<C')
 
+    async def async_sleep_enable(self, robot_id, hours, minutes, seconds):
+        await self.async_send_command(robot_id, '<S1{:02d}:{:02d}:{:02d}'.format(hours, minutes, seconds))
+
+    async def async_sleep_disable(self, robot_id):
+        await self.async_send_command(robot_id, '<S0')
+
     async def async_reset_drawer(self, robot_id):
         async def async_run():
             await self._async_login()
