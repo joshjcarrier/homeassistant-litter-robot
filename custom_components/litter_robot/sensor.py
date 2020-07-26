@@ -10,21 +10,6 @@ from homeassistant.helpers.entity import Entity
 
 from . import DOMAIN
 
-LITTER_ROBOT_UNIT_STATUS = {
-    'RDY': 'Ready',
-    'CCP': 'Clean Cycling',
-    'CCC': 'Ready - Clean Cycling Complete',
-    'DF1': 'Ready - 2 Cycles Until Full',
-    'DF2': 'Ready - 1 Cycle Until Full',
-    'CSI': 'Cat Sensor Interrupt',
-    'CST': 'Cat Sensor Timing',
-    'BR': 'Bonnet Removed',
-    'P': 'Paused',
-    'OFF': 'Off',
-    'SDF': 'Not Ready - Drawer Full',
-    'DFS': 'Not Ready - Drawer Full',
-    'CSF': 'Cat Sensor Interrupted'
-}
 SENSOR_PREFIX = 'Litter-Robot '
 
 _LOGGER = logging.getLogger(__name__)
@@ -40,6 +25,7 @@ async def async_setup_platform(hass, config_entry, async_add_entities, discovery
             "litter_robot_id": coordinator.data[id]['litterRobotId']
         }
         sensors.append(StatusSensor(coordinator, id, device_info))
+        sensors.append(ErrorSensor(coordinator, id, device_info))
         sensors.append(WasteGaugeSensor(coordinator, id, device_info))
         sensors.append(NightLightStatusSensor(coordinator, id, device_info))
 
@@ -95,7 +81,7 @@ class StatusSensor(LitterRobotEntity):
 
     @property
     def name(self):
-        """Return the state of the sensor."""
+        """Return the name of the sensor."""
         return self._name
 
     @property
@@ -107,9 +93,49 @@ class StatusSensor(LitterRobotEntity):
         if sleep_mode_active != '0' and unit_status == 'RDY':
             # over 8 hours since last sleep
             if int(sleep_mode_active[1:].split(':')[0]) < 8:
-                return 'Sleeping'
+                return '_sleep'
 
-        return LITTER_ROBOT_UNIT_STATUS.get(unit_status, unit_status)
+        return unit_status.lower()
+
+    @property
+    def device_class(self):
+        """Return the device class of the entity."""
+        return "litter_robot__status"
+
+    @property
+    def unit_of_measurement(self):
+        """Return the unit_of_measurement of the device."""
+        return None
+
+
+class ErrorSensor(LitterRobotEntity):
+    """Representation of the status sensor."""
+
+    def __init__(self, coordinator, id, device_info):
+        """Initialize of the sensor."""
+        LitterRobotEntity.__init__(self, coordinator, id, device_info)
+        self._name = SENSOR_PREFIX + \
+            coordinator.data[id]['litterRobotNickname'] + ' error'
+
+    @property
+    def icon(self):
+        return 'mdi:help-circle-outline'
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        robot = self._robot()
+        return robot['unitStatus'].lower()
+
+    @property
+    def device_class(self):
+        """Return the device class of the entity."""
+        return "litter_robot__error"
 
     @property
     def unit_of_measurement(self):

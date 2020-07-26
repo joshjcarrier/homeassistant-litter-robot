@@ -39,14 +39,14 @@ switch:
           service: litter_robot.nightlight_turn_off
       litter_robot_cycle:
         friendly_name: "Tesla Meowdel S Cycle"
-        value_template: "{{ is_state('sensor.litter_robot_tesla_meowdel_s_status', 'Clean Cycling') }}"
+        value_template: "{{ is_state('sensor.litter_robot_tesla_meowdel_s_status', 'Clean Cycling In Progress') }}"
         icon_template: "mdi:refresh"
         turn_on:
           service: litter_robot.cycle
         turn_off:
       litter_robot_reset_drawer:
         friendly_name: "Tesla Meowdel S Reset Drawer"
-        value_template: "{{ is_state('sensor.litter_robot_tesla_meowdel_s_status', 'Clean Cycling') }}"
+        value_template: "{{ is_state('sensor.litter_robot_tesla_meowdel_s_status', 'Clean Cycling In Progress') }}"
         icon_template: "mdi:repeat"
         turn_on:
           service: litter_robot.reset_drawer
@@ -73,6 +73,7 @@ Edit `/config/groups.yaml`. For a robot nicknamed "Tesla Meowdel S":
 Tesla Meowdel S:
   entities:
     - sensor.litter_robot_tesla_meowdel_s_status
+    - sensor.litter_robot_tesla_meowdel_s_error
     - sensor.litter_robot_tesla_meowdel_s_waste
     - switch.litter_robot_cycle
     - switch.litter_robot_nightlight
@@ -176,21 +177,30 @@ _Decoded JWT_:
 
 - `unitStatus`: is one of:
 
-| Unit Status | Definition                                                        |
-| ----------- | ----------------------------------------------------------------- |
-| RDY         | Unit ready to be used.                                            |
-| CCP         | Cleaning Cycle in Progress                                        |
-| CCC         | Cleaning Cycle Completed                                          |
-| CSF         | Cat Sensor Interrupted                                            |
-| DF1         | Drawer is Full -- But it is able to cycle a few more times.       |
-| DF2         | Drawer is Full -- But it is still able to cycle a few more times. |
-| CST         | Cat sensor timing                                                 |
-| CSI         | Cat sensor interrupt                                              |
-| BR          | Bonnet removed                                                    |
-| P           | Unit is Paused                                                    |
-| OFF         | Unit is turned off                                                |
-| SDF         | Drawer is completely full and will not cycle.                     |
-| DFS         | Drawer is completely full and will not cycle.                     |
+| Unit Status | Definition                   |
+| ----------- | ---------------------------- |
+| BR          | Bonnet Removed               |
+| CSF         | Cat Sensor Fault             |
+| SCF         | Cat Sensor Startup Fault     |
+| CSI         | Cat Sensor Interrupted       |
+| DHF         | Dump + Home Position Fault   |
+| DPF         | Dump Position Fault          |
+| HPF         | Home Position Fault          |
+| OTF         | Over Torque Fault            |
+| PD          | Pinch Detect                 |
+| SPF         | Pinch Detect Startup Fault   |
+| CST         | Cat Sensor Timing            |
+| CCC         | Clean Cycle Complete         |
+| CCP         | Clean Cycle In Progress      |
+| DF1         | Drawer Is Full warning       |
+| DF2         | Drawer Is Full no auto-cycle |
+| DFS         | Drawer Is Full no auto-cycle |
+| P           | Clean Cycle Paused           |
+| RDY         | Ready                        |
+| EC          | Empty Cycle                  |
+| OFFLINE     | Offline                      |
+| OFF         | Off                          |
+| UNKNOWN     | Unknown                      |
 
 ### Commands
 
@@ -241,3 +251,7 @@ body:
 ```
 
 Response is one full robot entity.
+
+### Translations
+
+Create a new `translations/sensor.<language code>.json` file that has the same keys found in `sensor.en.json`. See [frontend translations](https://github.com/home-assistant/frontend/tree/master/translations/frontend) for a list of other language codes (following the [BCP 47](https://tools.ietf.org/html/bcp47) standard).
