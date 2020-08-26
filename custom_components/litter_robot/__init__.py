@@ -86,22 +86,22 @@ async def async_setup(hass: HomeAssistant, config: Config):
             hass, platform, DOMAIN, {}, config))
 
     async def async_nightlight_on_handler(call):
-        await litter_robot.async_nightlight_on(call.data or list(litter_robot.robots.keys())[0])
+        await litter_robot.async_nightlight_on(call.data.get('litter_robot_id', list(litter_robot.robots.keys())[0]))
         await asyncio.sleep(15)
         await coordinator.async_request_refresh()
 
     async def async_nightlight_off_handler(call):
-        await litter_robot.async_nightlight_off(call.data or list(litter_robot.robots.keys())[0])
+        await litter_robot.async_nightlight_off(call.data.get('litter_robot_id', list(litter_robot.robots.keys())[0]))
         await asyncio.sleep(15)
         await coordinator.async_request_refresh()
 
     async def async_cycle_start_handler(call):
-        await litter_robot.async_cycle_start(call.data or list(litter_robot.robots.keys())[0])
+        await litter_robot.async_cycle_start(call.data.get('litter_robot_id', list(litter_robot.robots.keys())[0]))
         await asyncio.sleep(15)
         await coordinator.async_request_refresh()
 
     async def async_reset_drawer_handler(call):
-        await litter_robot.async_reset_drawer(call.data or list(litter_robot.robots.keys())[0])
+        await litter_robot.async_reset_drawer(call.data.get('litter_robot_id', list(litter_robot.robots.keys())[0]))
         await asyncio.sleep(15)
         await coordinator.async_request_refresh()
 
@@ -111,7 +111,7 @@ async def async_setup(hass: HomeAssistant, config: Config):
         await coordinator.async_request_refresh()
 
     async def async_sleep_disable_handler(call):
-        await litter_robot.async_sleep_disable(call.data or list(litter_robot.robots.keys())[0])
+        await litter_robot.async_sleep_disable(call.data.get('litter_robot_id', list(litter_robot.robots.keys())[0]))
         await asyncio.sleep(15)
         await coordinator.async_request_refresh()
 
