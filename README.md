@@ -27,8 +27,8 @@ Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 
 ```yaml
 litter_robot:
-  username: "<your litter-robot open connect email>"
-  password: "<your litter-robot password>"
+  username: !secret litter_robot_email
+  password: !secret litter_robot_password
   scan_interval: 120
 
 switch:
@@ -57,7 +57,11 @@ switch:
           service: litter_robot.reset_drawer
         turn_off:
 ```
-
+Then add the following to your /config/secrets.yaml:
+```
+litter_robot_email: <your_email@address>
+litter_robot_password: <your password>
+```
 ### Finishing setup
 
 Restart HASS to activate the component and to reapply config changes. This can be done from the frontend via Configuration -> General -> Server management -> Restart.
