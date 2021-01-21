@@ -19,7 +19,7 @@ rm -r homeassistant-litter-robot
 
 ## Setup
 
-You'll need to have connected to your robot at least once before with the mobile app.
+You'll need to have connected to your robot at least once before with the mobile [app](https://www.litter-robot.com/the-app.html).
 
 ### Configuration
 
