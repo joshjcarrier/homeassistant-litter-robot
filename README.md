@@ -10,11 +10,16 @@ The `litter-robot` component offers integration with the [Litter-Robot](https://
 
 ## Install
 
-Load this component by copying the entire directory as described in https://developers.home-assistant.io/docs/en/creating_component_loading.html . This is easiest with the Samba share add-on.
+Load this component by copying the custom_components/litter_robot directory and its contents to the custom_components directory in your Home Assistant's configuration directory, typically `/config/custom_components`, but may be [elsewhere](https://www.home-assistant.io/docs/configuration/) depending on your installation. This is easiest with the Samba share add-on.  Alternatively, from a [terminal](https://github.com/home-assistant/addons/blob/master/ssh/DOCS.md) run the following:
+```
+git clone --depth=1 https://github.com/joshjcarrier/homeassistant-litter-robot.git
+cp -r homeassistant-litter-robot/custom_components/litter_robot /config/custom_components/
+rm -r homeassistant-litter-robot
+```
 
 ## Setup
 
-You'll need to have connected to your robot at least once before with the mobile app.
+You'll need to have connected to your robot at least once before with the mobile [app](https://www.litter-robot.com/the-app.html).
 
 ### Configuration
 
@@ -22,8 +27,8 @@ Edit `/config/configuration.yaml`. For a robot nicknamed "Tesla Meowdel S":
 
 ```yaml
 litter_robot:
-  username: "<your litter-robot open connect email>"
-  password: "<your litter-robot password>"
+  username: !secret litter_robot_email
+  password: !secret litter_robot_password
   scan_interval: 120
 
 switch:
@@ -52,7 +57,11 @@ switch:
           service: litter_robot.reset_drawer
         turn_off:
 ```
-
+Then add the following to your /config/secrets.yaml:
+```
+litter_robot_email: <your_email@address>
+litter_robot_password: <your password>
+```
 ### Finishing setup
 
 Restart HASS to activate the component and to reapply config changes. This can be done from the frontend via Configuration -> General -> Server management -> Restart.
