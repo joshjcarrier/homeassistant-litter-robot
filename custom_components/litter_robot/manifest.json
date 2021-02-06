@@ -6,6 +6,5 @@
   "codeowners": [
     "@joshjcarrier"
   ],
-  "requirements": [],
-  "homeassistant": "0.111.0"
+  "requirements": []
 }

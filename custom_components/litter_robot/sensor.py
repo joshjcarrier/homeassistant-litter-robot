@@ -10,24 +10,60 @@ from homeassistant.helpers.entity import Entity
 
 from . import DOMAIN
 
-LITTER_ROBOT_UNIT_STATUS = {
-    'RDY': 'Ready',
-    'CCP': 'Clean Cycling',
-    'CCC': 'Ready - Clean Cycling Complete',
-    'DF1': 'Ready - 2 Cycles Until Full',
-    'DF2': 'Ready - 1 Cycle Until Full',
-    'CSI': 'Cat Sensor Interrupt',
-    'CST': 'Cat Sensor Timing',
-    'BR': 'Bonnet Removed',
-    'P': 'Paused',
-    'OFF': 'Off',
-    'SDF': 'Not Ready - Drawer Full',
-    'DFS': 'Not Ready - Drawer Full',
-    'CSF': 'Cat Sensor Interrupted'
-}
 SENSOR_PREFIX = 'Litter-Robot '
 
 _LOGGER = logging.getLogger(__name__)
+
+STATUS_STATES = {
+    "br": "Bonnet Removed",
+    "csf": "Cat Sensor Fault",
+    "scf": "Cat Sensor Startup Fault",
+    "csi": "Cat Sensor Interrupted",
+    "dhf": "Dump + Home Position Fault",
+    "dpf": "Dump Position Fault",
+    "hpf": "Home Position Fault",
+    "otf": "Over Torque Fault",
+    "pd": "Pinch Detect",
+    "spf": "Pinch Detect Startup Fault",
+    "cst": "Cat Sensor Timing",
+    "ccc": "Clean Cycle Completed",
+    "ccp": "Clean Cycle In Progress",
+    "df1": "Drawer Is Full",
+    "df2": "Drawer Is Full",
+    "dfs": "Drawer Is Full",
+    "p": "Paused",
+    "rdy": "Ready",
+    "ec": "Empty Cycle",
+    "offline": "Offline",
+    "off": "Off",
+    "unknown": "Unknown",
+    "_sleep": "Sleeping"
+}
+
+ERROR_STATES = {
+    "br": "Litter-Robot can't function until the top is secured",
+    "csf": "Remove excess litter and press reset.",
+    "scf": "Remove excess litter and press reset.",
+    "csi": "Cat re-entered the Litter-Robot while cycling.",
+    "dhf": "Litter-Robot unable to find the dump and home position.",
+    "dpf": "Litter-Robot unable to find the dump position.",
+    "hpf": "Litter-Robot unable to find the home position.",
+    "otf": "The globe rotation was over torqued.",
+    "pd": "Check for and clear any blockage, then press reset.",
+    "spf": "Check for and clear any blockage, then press reset.",
+    "cst": "",
+    "ccc": "",
+    "ccp": "",
+    "df1": "Empty the Waste Drawer soon or auto-cycle will be disabled.",
+    "df2": "Auto cycle disabled. Empty the Waste Drawer.",
+    "dfs": "Auto cycle disabled. Empty the Waste Drawer.",
+    "p": "Press Cycle to resume or press Empty or Reset to abort Clean Cycle.",
+    "rdy": "",
+    "ec": "",
+    "offline": "Check your unit's power and confirm that your WiFi is turned on.",
+    "off": "",
+    "unknown": ""
+}
 
 
 async def async_setup_platform(hass, config_entry, async_add_entities, discovery_info=None):
@@ -40,6 +76,7 @@ async def async_setup_platform(hass, config_entry, async_add_entities, discovery
             "litter_robot_id": coordinator.data[id]['litterRobotId']
         }
         sensors.append(StatusSensor(coordinator, id, device_info))
+        sensors.append(ErrorSensor(coordinator, id, device_info))
         sensors.append(WasteGaugeSensor(coordinator, id, device_info))
         sensors.append(NightLightStatusSensor(coordinator, id, device_info))
 
@@ -95,7 +132,7 @@ class StatusSensor(LitterRobotEntity):
 
     @property
     def name(self):
-        """Return the state of the sensor."""
+        """Return the name of the sensor."""
         return self._name
 
     @property
@@ -107,9 +144,49 @@ class StatusSensor(LitterRobotEntity):
         if sleep_mode_active != '0' and unit_status == 'RDY':
             # over 8 hours since last sleep
             if int(sleep_mode_active[1:].split(':')[0]) < 8:
-                return 'Sleeping'
+                return STATUS_STATES['_sleep']
 
-        return LITTER_ROBOT_UNIT_STATUS.get(unit_status, unit_status)
+        return STATUS_STATES.get(unit_status.lower(), 'unknown')
+
+    @property
+    def device_class(self):
+        """Return the device class of the entity."""
+        return "litter_robot__status"
+
+    @property
+    def unit_of_measurement(self):
+        """Return the unit_of_measurement of the device."""
+        return None
+
+
+class ErrorSensor(LitterRobotEntity):
+    """Representation of the status sensor."""
+
+    def __init__(self, coordinator, id, device_info):
+        """Initialize of the sensor."""
+        LitterRobotEntity.__init__(self, coordinator, id, device_info)
+        self._name = SENSOR_PREFIX + \
+            coordinator.data[id]['litterRobotNickname'] + ' error'
+
+    @property
+    def icon(self):
+        return 'mdi:help-circle-outline'
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        robot = self._robot()
+        return ERROR_STATES.get(robot['unitStatus'].lower(), 'unknown')
+
+    @property
+    def device_class(self):
+        """Return the device class of the entity."""
+        return "litter_robot__error"
 
     @property
     def unit_of_measurement(self):
