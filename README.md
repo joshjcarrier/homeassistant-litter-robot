@@ -4,7 +4,7 @@ The `litter-robot` component offers integration with the [Litter-Robot](https://
 
 > 🍻 I'm not employed by Litter Robot, and provide this plugin purely for our own enjoyment.
 >
-> Use [my referal code](http://share.litter-robot.com/rmc2b) and get \$25 off your own robot (and it tips me too!)
+> Use [my referal code](http://share.litterbox.com/3nsPTn) and get \$25 off your own robot (and it tips me too!)
 
 ![image](https://user-images.githubusercontent.com/526858/55689115-c8e37780-5935-11e9-979d-298452e87054.png)
 
