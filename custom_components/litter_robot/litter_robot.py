@@ -106,7 +106,7 @@ class LitterRobot:
                     response_json = await r.json()
                     self._auth_token = response_json['access_token']
                     claims = jwt.decode(
-                        response_json['access_token'], verify=False)
+                        response_json['access_token'], options={'verify_signature': False, 'verify_exp': True})
                     self._user_id = claims.get('userId')
         try:
             await async_run()
